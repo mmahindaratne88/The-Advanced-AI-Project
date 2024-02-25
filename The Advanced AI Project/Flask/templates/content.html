@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-container">
+    <h1 class="content-title" id="title">{{ file_name }}</h1>
+    <div class="file-content" id="content">{{ content }}</div>
+    <a href="{{ url_for('list_datasets') }}" class="back-link" id="back-link">Back to Main Server</a>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function loadTextOneCharAtATime(element, text) {
+            return new Promise(resolve => {
+                let index = 0;
+                const interval = setInterval(function () {
+                    if (text[index] === '\n') {
+                        element.innerHTML += '<br>';
+                    } else {
+                        element.innerHTML += text[index];
+                    }
+                    index++;
+                    if (index === text.length) {
+                        clearInterval(interval);
+                        resolve();
+                    }
+                }, 50);
+            });
+        }
+
+        const titleElement = document.getElementById('title');
+        const titleText = titleElement.innerText;
+
+        const contentElement = document.getElementById('content');
+        const contentText = contentElement.innerText;
+
+        titleElement.innerHTML = '';
+        contentElement.innerHTML = '';
+
+        loadTextOneCharAtATime(titleElement, titleText)
+            .then(() => loadTextOneCharAtATime(contentElement, contentText))
+    });
+</script>
+{% endblock %}
